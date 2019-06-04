@@ -2,15 +2,20 @@
 
 const request = require('request-promise-native')
 const functions = require('firebase-functions');
+//const { WebhookClient } = require('dialogflow-webhook');
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Card, Suggestion } = require('dialogflow-fulfillment');
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
+global.teamNumber = undefined;
+
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
     const agent = new WebhookClient({ request, response });
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+
+    
 
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
@@ -21,10 +26,19 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         agent.add(`I'm sorry, can you try again?`);
     }
 
+    function getTeamNumber(agent) {
+        teamNumber = agent.parameters.number;
+        agent.add(`This is a test`);
+        agent.add(`${teamNumber}`);
+        console.log(`team number: ${teamNumber}`)
+    }
+
+/*
     function teamInfo(agent) {
         return callTBA(agent.parameters.number).then(output => {
             let country = output.country;
             agent.add(`hahahahahaha from ${country}`)
+            console.log(`It worked`)
             return Promise.resolve(agent)
         }, error => {
             console.log(`error: ${error}`)
@@ -34,6 +48,22 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
             agent.add(`more errors`)
         })
     }
+*/
+    function address(agent){
+ return callTBA(teamNumber).then(output => {
+            let address = output.country;
+            agent.add(`Their address is ${address}`)
+            console.log(`It worked`)
+            return Promise.resolve(agent)
+        }, error => {
+            console.log(`error: ${error}`)
+            agent.add(`error`)
+        }).catch(function (err) {
+            console.log(`caught error ${err}`)
+            agent.add(`more errors`)
+        })
+    }
+    
 
     function description(agent) {
         console.log(agent.parameters);
@@ -93,13 +123,32 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
+<<<<<<< Updated upstream
     intentMap.set('team-origin', teamInfo);
     intentMap.set('description', description);
     intentMap.set('is-this-for-me', isThisForMe);
     intentMap.set('learn-more', learnMore);
+=======
+    //intentMap.set('team-origin', teamInfo);
+    intentMap.set('Address', address);
+    intentMap.set('message', getTeamNumber);
+>>>>>>> Stashed changes
     agent.handleRequest(intentMap);
 });
 
+
+function callTBA(teamNumbers) {
+    const options = {
+        url: 'https://www.thebluealliance.com/api/v3/team/frc' + teamNumbers,
+        headers:
+        {
+            'X-TBA-Auth-Key': 'iILYwywnVYDP36CtgFVYcZC97yci1cvRtd94iehC541M9gkMVn6VuFxhtSRBqVHe'
+        },
+        json: true
+    }
+    return request(options)
+}
+/*
 function callTBA(teamNumber) {
     const options = {
         url: 'https://www.thebluealliance.com/api/v3/team/frc'+teamNumber,
@@ -111,3 +160,4 @@ function callTBA(teamNumber) {
     }
     return request(options)
 }
+*/
