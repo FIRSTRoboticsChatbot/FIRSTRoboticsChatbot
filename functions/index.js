@@ -18,7 +18,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     
 
     function welcome(agent) {
-        agent.add(`Welcome to my agent!`);
+        agent.add(`Hi, I'm the FIRST Canada information bot!`);
+        agent.add(`To get started, take a look through our four different programs!`);
     }
 
     function fallback(agent) {
@@ -50,7 +51,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     }
 */
     function address(agent){
- return callTBA(teamNumber).then(output => {
+        return callTBA(teamNumber).then(output => {
             let address = output.country;
             agent.add(`Their address is ${address}`)
             console.log(`It worked`)
@@ -122,17 +123,14 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     // Run the proper function handler based on the matched Dialogflow intent name
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
+    intentMap.set('welcome', welcome);
     intentMap.set('Default Fallback Intent', fallback);
-<<<<<<< Updated upstream
-    intentMap.set('team-origin', teamInfo);
+    //intentMap.set('team-origin', teamInfo);
     intentMap.set('description', description);
     intentMap.set('is-this-for-me', isThisForMe);
     intentMap.set('learn-more', learnMore);
-=======
-    //intentMap.set('team-origin', teamInfo);
     intentMap.set('Address', address);
     intentMap.set('message', getTeamNumber);
->>>>>>> Stashed changes
     agent.handleRequest(intentMap);
 });
 
