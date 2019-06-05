@@ -3,11 +3,6 @@
 const request = require('request-promise-native')
 const functions = require('firebase-functions');
 //const { WebhookClient } = require('dialogflow-webhook');
-'use strict';
-
-const request = require('request-promise-native')
-const functions = require('firebase-functions');
-//const { WebhookClient } = require('dialogflow-webhook');
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Card, Suggestion } = require('dialogflow-fulfillment');
 
@@ -176,6 +171,18 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         } else {
             agent.add(`I'm sorry, I don't know what program you are referring to.`);
         }
+       
+        /*var replies = [{
+            "card": {
+                "title": "card title",
+                "subtitle": "card text",
+                "imageUrl": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+                "buttons": [{
+                    "text": "button text",
+                    "postback": "https://assistant.google.com/"
+                }]
+            }
+        }];*/
     }
 
     function isThisForMe(agent) {
