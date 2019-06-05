@@ -137,23 +137,13 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
             if (isMoreInfo){
             agent.add(`Do you want to know anything else about them?`)
-
-            let response;
-
-            response = {
-        "message": {
-                    "text": "Hello, Facebook!"
-                }
-            }
-         
-            agent.add(`${response}`); 
+            
+            agent.add(new Suggestion(`Main Menu`));
             isMoreInfo = false;
         }
             else {
              agent.add(`error`)
               }
-
-
         }
     
     function description(agent) {
