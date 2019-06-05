@@ -3,18 +3,24 @@
 const request = require('request-promise-native')
 const functions = require('firebase-functions');
 //const { WebhookClient } = require('dialogflow-webhook');
+'use strict';
+
+const request = require('request-promise-native')
+const functions = require('firebase-functions');
+//const { WebhookClient } = require('dialogflow-webhook');
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Card, Suggestion } = require('dialogflow-fulfillment');
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
+//global varaibles
 global.teamNumber = undefined;
+global.isMoreInfo = false;
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
     const agent = new WebhookClient({ request, response });
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
-
     
 
     function welcome(agent) {
@@ -29,8 +35,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
     function getTeamNumber(agent) {
         teamNumber = agent.parameters.number;
-        agent.add(`This is a test`);
-        agent.add(`${teamNumber}`);
+        agent.add(`I know that team. They're awesome.
+        I can help you find out a lot about them including 
+        their nickname, rookie year, city,events 
+        attended and their website. What would you
+        like to know?`);
+        //agent.add(`${teamNumber}`);
         console.log(`team number: ${teamNumber}`)
     }
 
@@ -50,11 +60,74 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         })
     }
 */
-    function address(agent){
+    function nickName(agent){
         return callTBA(teamNumber).then(output => {
-            let address = output.country;
-            agent.add(`Their address is ${address}`)
+            let nickname = output.nickname;
+            agent.add(`Their nickname is ${nickname}`)
             console.log(`It worked`)
+            isMoreInfo = true;
+            //calls moreInfo method to check if user wants to keep asking info
+            console.log(`raptors in 7`)
+            moreInfo();
+            return Promise.resolve(agent)
+        }, error => {
+            console.log(`error: ${error}`)
+            agent.add(`error`)
+        }).catch(function (err) {
+            console.log(`caught error ${err}`)
+            agent.add(`more errors`)
+        })
+        moreInfo();
+    }
+
+     function website(agent){
+        return callTBA(teamNumber).then(output => {
+            let website = output.website;
+            agent.add(`Their website is ${website}`)
+            console.log(`It worked`)
+            isMoreInfo = true;
+            //calls moreInfo method to check if user wants to keep asking info
+            console.log(`raptors in 7`)
+            moreInfo();
+            return Promise.resolve(agent)  
+           
+        }, error => {
+            console.log(`error: ${error}`)
+            agent.add(`error`)
+        }).catch(function (err) {
+            console.log(`caught error ${err}`)
+            agent.add(`more errors`)
+        })
+    }
+
+     function city(agent){
+        return callTBA(teamNumber).then(output => {
+            let city = output.city;
+            agent.add(`The city the team lives in is ${city}`)
+            console.log(`It worked`)
+            isMoreInfo = true;
+            //calls moreInfo method to check if user wants to keep asking info
+            console.log(`raptors in 7`)
+            moreInfo();
+            return Promise.resolve(agent)
+        }, error => {
+            console.log(`error: ${error}`)
+            agent.add(`error`)
+        }).catch(function (err) {
+            console.log(`caught error ${err}`)
+            agent.add(`more errors`)
+        })
+    }
+
+     function rookieYear(agent){
+        return callTBA(teamNumber).then(output => {
+            let rookie_year = output.rookie_year;
+            agent.add(`Their rookie year was ${rookie_year}`)
+            console.log(`It worked`)
+            isMoreInfo = true;
+            //calls moreInfo method to check if user wants to keep asking info
+            console.log(`raptors in 7`)
+            moreInfo();
             return Promise.resolve(agent)
         }, error => {
             console.log(`error: ${error}`)
@@ -65,7 +138,29 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         })
     }
     
+        function moreInfo(){
 
+            if (isMoreInfo){
+            agent.add(`Do you want to know anything else about them?`)
+
+            let response;
+
+            response = {
+        "message": {
+                    "text": "Hello, Facebook!"
+                }
+            }
+         
+            agent.add(`${response}`); 
+            isMoreInfo = false;
+        }
+            else {
+             agent.add(`error`)
+              }
+
+
+        }
+    
     function description(agent) {
         console.log(agent.parameters);
         let type = agent.parameters.topic;
@@ -129,8 +224,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     intentMap.set('description', description);
     intentMap.set('is-this-for-me', isThisForMe);
     intentMap.set('learn-more', learnMore);
-    intentMap.set('Address', address);
-    intentMap.set('message', getTeamNumber);
+    intentMap.set('Nickname', nickName);
+    intentMap.set('City', city);
+    intentMap.set('Rookie year', rookieYear);
+    intentMap.set('Website', website);
+   // intentMap.set('More info', moreInfo);
+    intentMap.set('teamResponse', getTeamNumber);
     agent.handleRequest(intentMap);
 });
 
