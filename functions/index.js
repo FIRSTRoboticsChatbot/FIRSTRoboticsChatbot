@@ -175,29 +175,29 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         });
 
         if(type==`FLL Jr.`) {
-            agent.add(`FIRST LEGO League Jr. is a non-competitive robotics program designed for younger robotics enthusiasts. It is designed to introduce STEM concepts to kids ages 6 to 10 while exciting them through a brand they know and love − LEGO®.`);
+            quickReplies.title=`FIRST LEGO League Jr. is a non-competitive robotics program designed for younger robotics enthusiasts. It is designed to introduce STEM concepts to kids ages 6 to 10 while exciting them through a brand they know and love − LEGO®.`;
         
             quickReplies.addReply_(`Is FLL Jr. for me?`);
             quickReplies.addReply_(`Learn more about FLL Jr.`);
         } else if(type==`FLL`) {
-            agent.add(`FIRST LEGO League introduces younger students to real-world engineering challenges by building LEGO-based robots to complete tasks on a thematic playing surface.`);
-        
+            quickReplies.title=`FIRST LEGO League introduces younger students to real-world engineering challenges by building LEGO-based robots to complete tasks on a thematic playing surface.`;
+
             quickReplies.addReply_(`Is FLL for me?`);
             quickReplies.addReply_(`Learn more about FLL`);
         } else if(type==`FTC`) {
-            agent.add(`FIRST Tech Challenge teams (10+ members) are challenged to design, build, program, and operate robots to compete in a head-to-head challenge in an alliance format.`);
-        
+            quickReplies.title=`FIRST Tech Challenge teams (10+ members) are challenged to design, build, program, and operate robots to compete in a head-to-head challenge in an alliance format.`;
+
             quickReplies.addReply_(`Is FTC for me?`);
             quickReplies.addReply_(`Learn more about FTC`);
         } else if(type==`FRC`) {
             agent.add(`Combining the excitement of sport with the rigors of science and technology, we call FIRST Robotics Competition the ultimate Sport for the Mind.`);
             agent.add(`Built from scratch in only 6 weeks, robots compete in high intensity robo-sports.`);
-            agent.add(`To learn more about this program, get involved, find resources or speak to a local representative, visit https://www.firstroboticscanada.org/frc/.`);
-        
+            quickReplies.title=`To learn more about this program, get involved, find resources or speak to a local representative, visit https://www.firstroboticscanada.org/frc/.`;
+
             quickReplies.addReply_(`Is FRC for me?`);
             quickReplies.addReply_(`Find a team`);
         } else {
-            agent.add(`I'm sorry, I don't know what program you are referring to.`);
+            quickReplies.title=`I'm sorry, I don't know what program you are referring to.`;
         }
 
         agent.add(quickReplies);
@@ -214,32 +214,32 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         if(type==`FLL Jr.`) {
             agent.add(`Guided by adult Coaches, teams of up to 6 members explore a real-world scientific problem such as food safety, recycling, energy, etc.`);
             agent.add(`They create a poster that illustrates their research and they build a motorized model of what they learned using LEGO elements.`);
-            agent.add(`In the process, teams learn about teamwork, the wonders of science and technology, and the FIRST LEGO League Jr. Core Values, which include respect, sharing, and critical thinking.`);
+            quickReplies.title=`In the process, teams learn about teamwork, the wonders of science and technology, and the FIRST LEGO League Jr. Core Values, which include respect, sharing, and critical thinking.`;
             
             quickReplies.addReply_(`Describe FLL Jr.`);
             quickReplies.addReply_(`Learn more about FLL Jr.`);
         } else if(type==`FLL`) {
             agent.add(`As a part of an FLL team, students get to design, build, test and program robots using LEGO MINDSTORMS® technology, and apply real-world math and science concepts.`);
-            agent.add(`Students also research challenges facing today’s scientists and create innovative and viable solutions while learning critical thinking, team-building and presentation skills.`);
+            quickReplies.title=`Students also research challenges facing today’s scientists and create innovative and viable solutions while learning critical thinking, team-building and presentation skills.`;
         
             quickReplies.addReply_(`Describe FLL`);
             quickReplies.addReply_(`Learn more about FLL`);
         } else if(type==`FTC`) {
             agent.add(`Guided by adult Coaches and Mentors, students develop STEM skills and practice engineering principles, while realizing the value of hard work, innovation, and sharing ideas.`);
-            agent.add(`The robot kit can be programmed using a variety of languages. Teams must also raise funds, design and market their team brand, and do community outreach for which they can win awards.`);
+            quickReplies.title=`The robot kit can be programmed using a variety of languages. Teams must also raise funds, design and market their team brand, and do community outreach for which they can win awards.`;
             
             quickReplies.addReply_(`Describe FTC`);
             quickReplies.addReply_(`Learn more about FTC`);
         } else if(type==`FRC`) {
             agent.add(`Under strict rules, limited resources, and time limits, teams of 25 students or more are challenged to raise funds, hone teamwork skills, and build and program robots to perform prescribed tasks against a field of competitors.`);
-            agent.add(`To learn more about this program, get involved, find resources or speak to a local representative, visit https://www.firstroboticscanada.org/frc/.`);
+            quickReplies.title=`To learn more about this program, get involved, find resources or speak to a local representative, visit https://www.firstroboticscanada.org/frc/.`;
         
             quickReplies.addReply_(`Describe FRC`);
             quickReplies.addReply_(`Find a team`);
         } else {
-            agent.add(`I'm sorry, I don't know what program you are referring to.`);
+            quickReplies.title=`I'm sorry, I don't know what program you are referring to.`;
         }
-
+        
         agent.add(quickReplies);
     }
 
@@ -252,27 +252,27 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         });
 
         if(type==`FLL Jr.`) {
-            agent.add(`To learn more about this program, get involved, find teams or speak to a local representative, visit https://www.firstroboticscanada.org/flljr/.`);
+            quickReplies.title=`To learn more about this program, get involved, find teams or speak to a local representative, visit https://www.firstroboticscanada.org/flljr/.`;
         
             quickReplies.addReply_(`Describe FLL Jr.`);
             quickReplies.addReply_(`Is FLL Jr. for me?`);
         } else if(type==`FLL`) {
-            agent.add(`To learn more about this program, get involved, find teams or speak to a local representative, visit https://www.firstroboticscanada.org/fll/.`);
+            quickReplies.title=`To learn more about this program, get involved, find teams or speak to a local representative, visit https://www.firstroboticscanada.org/fll/.`;
         
-            quickReplies.addReply_(`Describe FLL.`);
+            quickReplies.addReply_(`Describe FLL`);
             quickReplies.addReply_(`Is FLL for me?`);
         } else if(type==`FTC`) {
-            agent.add(`To learn more about this program, get involved, find teams or speak to a local representative, visit https://www.firstroboticscanada.org/ftc/.`);
+            quickReplies.title=`To learn more about this program, get involved, find teams or speak to a local representative, visit https://www.firstroboticscanada.org/ftc/.`;
         
             quickReplies.addReply_(`Describe FTC`);
             quickReplies.addReply_(`Is FTC for me?`);
         } else if(type==`FRC`) {
-            agent.add(`To learn more about this program, get involved, find resources or speak to a local representative, visit https://www.firstroboticscanada.org/frc/.`);
+            quickReplies.title=`To learn more about this program, get involved, find resources or speak to a local representative, visit https://www.firstroboticscanada.org/frc/.`;
         
             quickReplies.addReply_(`Describe FRC.`);
             quickReplies.addReply_(`Is FRC. for me?`);
         } else {
-            agent.add(`I'm sorry, I don't know what program you are referring to.`);
+            quickReplies.title=`I'm sorry, I don't know what program you are referring to.`;
         }
 
         agent.add(quickReplies);
