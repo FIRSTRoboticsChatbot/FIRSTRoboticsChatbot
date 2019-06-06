@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "actions-on-google": "^2.7.0",
-    "dialogflow-fulfillment": "^0.6.1",
+    "dialogflow-fulfillment": "git+https://github.com/naranjja/dialogflow-fulfillment-nodejs.git",
     "firebase-admin": "~7.0.0",
     "firebase-functions": "^2.3.0",
     "request": "^2.88.0",
