@@ -69,6 +69,28 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         moreInfo();
     }
 
+     function getEvents(agent){
+        return callTBA2(teamNumber).then(output => {
+            agent.add(`The events they attended were: `)
+            output.map(eventsObj => {
+               agent.add(eventsObj.name);
+            });
+            console.log(`It worked`)
+            isMoreInfo = true;
+            //calls moreInfo method to check if user wants to keep asking info
+            console.log(`raptors in 7`)
+            moreInfo();
+            return Promise.resolve(agent)
+        }, error => {
+            console.log(`error: ${error}`)
+            agent.add(`error`)
+        }).catch(function (err) {
+            console.log(`caught error ${err}`)
+            agent.add(`more errors`)
+        })
+        moreInfo();
+    }
+
      function website(agent){
         return callTBA(teamNumber).then(output => {
             let website = output.website;
@@ -96,7 +118,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
             console.log(`It worked`)
             isMoreInfo = true;
             //calls moreInfo method to check if user wants to keep asking info
-            console.log(`raptors in 7`)
+            console.log(`raptors in 6`)
             moreInfo();
             return Promise.resolve(agent)
         }, error => {
@@ -130,9 +152,13 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         function moreInfo(){
 
             if (isMoreInfo){
-            agent.add(`Do you want to know anything else about them?`)
             
-            agent.add(new Suggestion(`Main Menu`));
+            const quickReplies = new Suggestion({
+            title: `Do you want to know anything else about them?`,
+            reply: `Main Menu`
+        });
+
+            agent.add(quickReplies);    
             isMoreInfo = false;
         }
             else {
@@ -265,15 +291,28 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     intentMap.set('City', city);
     intentMap.set('Rookie year', rookieYear);
     intentMap.set('Website', website);
+    intentMap.set('Events', getEvents);
    // intentMap.set('More info', moreInfo);
     intentMap.set('teamResponse', getTeamNumber);
     agent.handleRequest(intentMap);
 });
 
 
+function callTBA2(teamNumbers) {
+    const options = {
+        url: 'https://www.thebluealliance.com/api/v3/team/frc' + teamNumbers + '/events/2019/simple',
+        headers:
+        {
+            'X-TBA-Auth-Key': 'iILYwywnVYDP36CtgFVYcZC97yci1cvRtd94iehC541M9gkMVn6VuFxhtSRBqVHe'
+        },
+        json: true
+    }
+    return request(options)
+}
+
 function callTBA(teamNumbers) {
     const options = {
-        url: 'https://www.thebluealliance.com/api/v3/team/frc' + teamNumbers,
+        url: 'https://www.thebluealliance.com/api/v3/team/frc' + teamNumbers ,
         headers:
         {
             'X-TBA-Auth-Key': 'iILYwywnVYDP36CtgFVYcZC97yci1cvRtd94iehC541M9gkMVn6VuFxhtSRBqVHe'
