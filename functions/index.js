@@ -178,7 +178,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
             quickReplies.title=`FIRST LEGO League Jr. is a non-competitive robotics program designed for younger robotics enthusiasts. It is designed to introduce STEM concepts to kids ages 6 to 10 while exciting them through a brand they know and love − LEGO®.`;
         
             quickReplies.addReply_(`Is FLL Jr. for me?`);
-            quickReplies.addReply_(`Learn more about FLL Jr.`);
+            quickReplies.addReply_(`Learn about FLL Jr.`);
         } else if(type==`FLL`) {
             quickReplies.title=`FIRST LEGO League introduces younger students to real-world engineering challenges by building LEGO-based robots to complete tasks on a thematic playing surface.`;
 
@@ -217,7 +217,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
             quickReplies.title=`In the process, teams learn about teamwork, the wonders of science and technology, and the FIRST LEGO League Jr. Core Values, which include respect, sharing, and critical thinking.`;
             
             quickReplies.addReply_(`Describe FLL Jr.`);
-            quickReplies.addReply_(`Learn more about FLL Jr.`);
+            quickReplies.addReply_(`Learn about FLL Jr.`);
         } else if(type==`FLL`) {
             agent.add(`As a part of an FLL team, students get to design, build, test and program robots using LEGO MINDSTORMS® technology, and apply real-world math and science concepts.`);
             quickReplies.title=`Students also research challenges facing today’s scientists and create innovative and viable solutions while learning critical thinking, team-building and presentation skills.`;
