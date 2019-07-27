@@ -33,38 +33,21 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         console.log(`team number: ${teamNumber}`)
     }
 
-/*
-    function teamInfo(agent) {
-        return callTBA(agent.parameters.number).then(output => {
-            let country = output.country;
-            agent.add(`hahahahahaha from ${country}`)
-            console.log(`It worked`)
-            return Promise.resolve(agent)
-        }, error => {
-            console.log(`error: ${error}`)
-            agent.add(`error`)
-        }).catch(function (err) {
-            console.log(`caught error ${err}`)
-            agent.add(`more errors`)
-        })
-    }
-*/
     function nickName(agent){
         return callTBA(teamNumber).then(output => {
             let nickname = output.nickname;
-            agent.add(`Their nickname is ${nickname}`)
+            if(nickname == null) agent.add(`That team does not have a nickname.`);
+            else agent.add(`Their nickname is ${nickname}`)
             console.log(`It worked`)
             isMoreInfo = true;
-            //calls moreInfo method to check if user wants to keep asking info
-            console.log(`raptors in 7`)
             moreInfo();
             return Promise.resolve(agent)
         }, error => {
             console.log(`error: ${error}`)
-            agent.add(`error`)
+            findATeam(agent);
         }).catch(function (err) {
             console.log(`caught error ${err}`)
-            agent.add(`more errors`)
+            findATeam(agent);
         })
         moreInfo();
     }
@@ -83,10 +66,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
             return Promise.resolve(agent)
         }, error => {
             console.log(`error: ${error}`)
-            agent.add(`error`)
+            findATeam(agent);
         }).catch(function (err) {
             console.log(`caught error ${err}`)
-            agent.add(`more errors`)
+            findATeam(agent);
         })
         moreInfo();
     }
@@ -94,8 +77,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
      function website(agent){
         return callTBA(teamNumber).then(output => {
             let website = output.website;
-            agent.add(`Their website is ${website}`)
-            console.log(`It worked`)
+            if(website == null) agent.add(`That team does not have a website.`);
+            else agent.add(`Their website is ${website}`)
+
             isMoreInfo = true;
             //calls moreInfo method to check if user wants to keep asking info
             console.log(`raptors in 7`)
@@ -104,36 +88,38 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
            
         }, error => {
             console.log(`error: ${error}`)
-            agent.add(`error`)
+            findATeam(agent);
         }).catch(function (err) {
             console.log(`caught error ${err}`)
-            agent.add(`more errors`)
+            findATeam(agent);
         })
     }
 
      function city(agent){
         return callTBA(teamNumber).then(output => {
             let city = output.city;
-            agent.add(`The city the team lives in is ${city}`)
+            if(city == null) agent.add(`That team does not have a city on file.`);
+            else agent.add(`They are from ${city}`)
             console.log(`It worked`)
             isMoreInfo = true;
             //calls moreInfo method to check if user wants to keep asking info
-            console.log(`raptors in 6`)
             moreInfo();
             return Promise.resolve(agent)
         }, error => {
             console.log(`error: ${error}`)
-            agent.add(`error`)
+            findATeamByCity(agent);
         }).catch(function (err) {
             console.log(`caught error ${err}`)
-            agent.add(`more errors`)
+            findATeamByCity(agent);
         })
     }
+
 
      function rookieYear(agent){
         return callTBA(teamNumber).then(output => {
             let rookie_year = output.rookie_year;
-            agent.add(`Their rookie year was ${rookie_year}`)
+            if(rookie_year == null) agent.add(`That team does not have a rookie year on file.`);
+            else agent.add(`Their rookie year was ${rookie_year}`);
             console.log(`It worked`)
             isMoreInfo = true;
             //calls moreInfo method to check if user wants to keep asking info
@@ -142,10 +128,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
             return Promise.resolve(agent)
         }, error => {
             console.log(`error: ${error}`)
-            agent.add(`error`)
+            findATeam(agent);
         }).catch(function (err) {
             console.log(`caught error ${err}`)
-            agent.add(`more errors`)
+            findATeam(agent);
         })
     }
     
@@ -162,11 +148,14 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
             isMoreInfo = false;
         }
             else {
-             agent.add(`error`)
-              }
+                findATeam(agent);
+            }
         }
     
     function description(agent) {
+        teamNumber = undefined;
+
+
         console.log(agent.parameters);
         let type = checkWord(agent.parameters.topic);
         const quickReplies = new Suggestion({
@@ -175,25 +164,27 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         });
 
         if(type==`FLL Jr.`) {
-            quickReplies.title=`FIRST LEGO League Jr. is a non-competitive robotics program designed for younger robotics enthusiasts. It is designed to introduce STEM concepts to kids ages 6 to 10 while exciting them through a brand they know and love − LEGO®.`;
-        
+            agent.add(`FIRST LEGO League Jr. is a non-competitive robotics program designed for younger robotics enthusiasts. It is designed to introduce STEM concepts to kids ages 6 to 10 while exciting them through a brand they know and love − LEGO®.`)
+            quickReplies.title=`Teams learn about teamwork and the FLL Jr. Core Values, which include respect, sharing, and critical thinking.`;
+
             quickReplies.addReply_(`Is FLL Jr. for me?`);
             quickReplies.addReply_(`Learn about FLL Jr.`);
         } else if(type==`FLL`) {
-            quickReplies.title=`FIRST LEGO League introduces younger students to real-world engineering challenges by building LEGO-based robots to complete tasks on a thematic playing surface.`;
+            agent.add(`FIRST LEGO League introduces all kids ages 9 to 14 to real-world engineering challenges by building LEGO-based robots to complete tasks on a thematic playing surface.`);
+            quickReplies.title=`Teams learn how to program a fully autonomous robot while integrating various sensors. They also learn about teamwork and the FIRST LEGO League Core Values, which include respect, sharing, and critical thinking.`;
 
             quickReplies.addReply_(`Is FLL for me?`);
             quickReplies.addReply_(`Learn more about FLL`);
         } else if(type==`FTC`) {
-            quickReplies.title=`FIRST Tech Challenge teams (10+ members) are challenged to design, build, program, and operate robots to compete in a head-to-head challenge in an alliance format.`;
+            agent.add(`FIRST Tech Challenge teams are comprised of kids in grades 7 to 12 who are challenged to design, build, program, and operate robots to compete in a head-to-head challenge in an alliance format.`);
+            quickReplies.title=`Teams learn how to design, build, program and test a fully functioning robot. In the process, they also learn about teamwork, branding, sponsorship and gracious professionalism.`;
 
             quickReplies.addReply_(`Is FTC for me?`);
             quickReplies.addReply_(`Learn more about FTC`);
         } else if(type==`FRC`) {
-            agent.add(`Combining the excitement of sport with the rigors of science and technology, we call FIRST Robotics Competition the ultimate Sport for the Mind.`);
-            agent.add(`Built from scratch in only 6 weeks, robots compete in high intensity robo-sports.`);
-            quickReplies.title=`To learn more about this program, get involved, find resources or speak to a local representative, visit https://www.firstroboticscanada.org/frc/.`;
-
+            agent.add(`FIRST Robotics Competition teams include kids in grades 9 to 12 who compete in the ultimate sport of the mind.`);
+            quickReplies.title=`Teams learn how to design, build, program and test a fully functioning robot. In the process, they also learn about teamwork, branding, sponsorship and gracious professionalism.`;
+            
             quickReplies.addReply_(`Is FRC for me?`);
             quickReplies.addReply_(`Find a team`);
         } else {
@@ -204,6 +195,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     }
 
     function isThisForMe(agent) {
+        teamNumber = undefined;
+
+        
         console.log(agent.parameters);
         let type = checkWord(agent.parameters.topic);
         const quickReplies = new Suggestion({
@@ -213,25 +207,24 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
         if(type==`FLL Jr.`) {
             agent.add(`Guided by adult Coaches, teams of up to 6 members explore a real-world scientific problem such as food safety, recycling, energy, etc.`);
-            agent.add(`They create a poster that illustrates their research and they build a motorized model of what they learned using LEGO elements.`);
-            quickReplies.title=`In the process, teams learn about teamwork, the wonders of science and technology, and the FIRST LEGO League Jr. Core Values, which include respect, sharing, and critical thinking.`;
+            quickReplies.title=`They create a poster that illustrates their research and they build a motorized model of what they learned using LEGO elements.`;
             
             quickReplies.addReply_(`Describe FLL Jr.`);
             quickReplies.addReply_(`Learn about FLL Jr.`);
         } else if(type==`FLL`) {
-            agent.add(`As a part of an FLL team, students get to design, build, test and program robots using LEGO MINDSTORMS® technology, and apply real-world math and science concepts.`);
+            agent.add(`FLL teams are comprised of up to 10 students. They get to design, build, test and program robots using LEGO MINDSTORMS® technology, and apply real-world math and science concepts.`);
             quickReplies.title=`Students also research challenges facing today’s scientists and create innovative and viable solutions while learning critical thinking, team-building and presentation skills.`;
         
             quickReplies.addReply_(`Describe FLL`);
             quickReplies.addReply_(`Learn more about FLL`);
         } else if(type==`FTC`) {
-            agent.add(`Guided by adult Coaches and Mentors, students develop STEM skills and practice engineering principles, while realizing the value of hard work, innovation, and sharing ideas.`);
+            agent.add(`Guided by adult Coaches, teams of up to 15 students develop STEM skills and practice engineering principles, while realizing the value of hard work, innovation, and sharing ideas.`);
             quickReplies.title=`The robot kit can be programmed using a variety of languages. Teams must also raise funds, design and market their team brand, and do community outreach for which they can win awards.`;
             
             quickReplies.addReply_(`Describe FTC`);
             quickReplies.addReply_(`Learn more about FTC`);
         } else if(type==`FRC`) {
-            agent.add(`Under strict rules, limited resources, and time limits, teams of 25 students or more are challenged to raise funds, hone teamwork skills, and build and program robots to perform prescribed tasks against a field of competitors.`);
+            agent.add(`Under strict rules, limited resources, and time limits, teams of 10 students or more are challenged to raise funds, hone teamwork skills, and build and program robots to perform prescribed tasks against a field of competitors.`);
             quickReplies.title=`To learn more about this program, get involved, find resources or speak to a local representative, visit https://www.firstroboticscanada.org/frc/.`;
         
             quickReplies.addReply_(`Describe FRC`);
@@ -244,6 +237,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     }
 
     function learnMore(agent) {
+        teamNumber = undefined;
+
+
         console.log(agent.parameters);
         let type = checkWord(agent.parameters.topic);
         const quickReplies = new Suggestion({
@@ -278,6 +274,35 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         agent.add(quickReplies);
     }
 
+    function findATeam(agent) {
+        teamNumber = undefined;
+
+        const quickReplies = new Suggestion({
+            title: choose,
+            reply: `Main Menu`
+        });
+
+
+        quickReplies.title=`Great! I can help you do that. Do you want to find a team by their city or by their number?`;
+        quickReplies.addReply_(`By City`);
+        quickReplies.addReply_(`By Number`);
+    }
+
+    function findATeamByNumber(agent) {
+        teamNumber = undefined;
+
+        agent.add(`Please type in the team number you are interested in.`);
+    }
+
+    
+    function findATeamByCity(agent) {
+        teamNumber = undefined;
+
+        agent.add(`You can find a team near you by visiting this site https://www.firstroboticscanada.org/map/`);
+        agent.add(`On this website you will be able to zoom into your city and find the closest FLL Jr., FLL, FTC, and FRC teams!`);
+    }
+
+
     // Run the proper function handler based on the matched Dialogflow intent name
     let intentMap = new Map();
     //intentMap.set('Default Welcome Intent', welcome);
@@ -292,10 +317,65 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     intentMap.set('Rookie year', rookieYear);
     intentMap.set('Website', website);
     intentMap.set('Events', getEvents);
+    intentMap.set(`findATeam`, findATeam);
+    intentMap.set(`findATeamByNumber`, findATeamByNumber);
+    intentMap.set(`findATeamByCity`, findATeamByCity);
+    intentMap.set(`parentInquiry`, parentInquiry)
+    intentMap.set(`mentorInquiry`, mentorInquiry)
+    intentMap.set(`volunterInquiry`, volunterInquiry)
+    intentMap.set(`travelInquiry`, travelInquiry)
+    intentMap.set(`bestProgram`, bestProgram)
    // intentMap.set('More info', moreInfo);
     intentMap.set('teamResponse', getTeamNumber);
     agent.handleRequest(intentMap);
 });
+
+function parentInquiry(agent) {
+    teamNumber = undefined;
+
+    agent.add(`Parents can help out with their child’s team and/or sign up to be a volunteer at a competition!`);
+    agent.add(`Reach out to your team lead if you are interested in helping out your child’s team or visit us for volunteer roles at https://www.firstroboticscanada.org/get-involved/volunteer/`);
+}
+
+function mentorInquiry(agent) {
+    teamNumber = undefined;
+
+    agent.add(`Students of all ages always need passionate mentors! To get involved with a team, visit us at https://www.firstroboticscanada.org/get-involved/mentor/`);
+}
+
+function volunterInquiry(agent) {
+    teamNumber = undefined;
+
+    agent.add(`There are lots of positions to fill at all levels of FIRST competitions. Visit us to learn more https://www.firstroboticscanada.org/get-involved/volunteer/`);
+}
+
+function travelInquiry(agent) {
+    teamNumber = undefined;
+
+    agent.add(`Team practices may occur on weekends but each team is different. Competitions on the other hand are always at least one weekend day long and take place locally.`);
+    agent.add(`If your team qualifies for the World Championship, this competition is hosted in the US and will require international travel.`);
+}
+
+
+
+function \(agent) {
+    teamNumber = undefined;
+
+    const quickReplies = new Suggestion({
+        title: choose,
+        reply: `Main Menu`
+    });
+
+    quickReplies.title=`FLL Jr. is for kids 6-10, FLL for kids 9-14, FTC for kids 12-18 and FRC for kids 14-18.`;
+
+    quickReplies.addReply_(`Learn more about FLL Jr.`);
+    quickReplies.addReply_(`Learn more about FLL`);
+    quickReplies.addReply_(`Learn more about FTC`);
+    quickReplies.addReply_(`Learn more about FRC`);
+}
+
+
+
 
 
 function callTBA2(teamNumbers) {
