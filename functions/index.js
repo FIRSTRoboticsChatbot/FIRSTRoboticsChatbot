@@ -279,13 +279,14 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
         const quickReplies = new Suggestion({
             title: choose,
-            reply: `Main Menu`
+            reply: `By City`
         });
 
 
         quickReplies.title=`Great! I can help you do that. Do you want to find a team by their city or by their number?`;
-        quickReplies.addReply_(`By City`);
         quickReplies.addReply_(`By Number`);
+
+        agent.add(quickReplies);
     }
 
     function findATeamByNumber(agent) {
@@ -320,11 +321,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     intentMap.set(`findATeam`, findATeam);
     intentMap.set(`findATeamByNumber`, findATeamByNumber);
     intentMap.set(`findATeamByCity`, findATeamByCity);
-    intentMap.set(`parentInquiry`, parentInquiry)
-    intentMap.set(`mentorInquiry`, mentorInquiry)
-    intentMap.set(`volunterInquiry`, volunterInquiry)
-    intentMap.set(`travelInquiry`, travelInquiry)
-    intentMap.set(`bestProgram`, bestProgram)
+    intentMap.set(`parentInquiry`, parentInquiry);
+    intentMap.set(`mentorInquiry`, mentorInquiry);
+    intentMap.set(`volunteerInquiry`, volunteerInquiry);
+    intentMap.set(`travelInquiry`, travelInquiry);
+    intentMap.set(`bestProgram`, bestProgram);
+    intentMap.set(`swearing`, swearing)
    // intentMap.set('More info', moreInfo);
     intentMap.set('teamResponse', getTeamNumber);
     agent.handleRequest(intentMap);
@@ -343,7 +345,7 @@ function mentorInquiry(agent) {
     agent.add(`Students of all ages always need passionate mentors! To get involved with a team, visit us at https://www.firstroboticscanada.org/get-involved/mentor/`);
 }
 
-function volunterInquiry(agent) {
+function volunteerInquiry(agent) {
     teamNumber = undefined;
 
     agent.add(`There are lots of positions to fill at all levels of FIRST competitions. Visit us to learn more https://www.firstroboticscanada.org/get-involved/volunteer/`);
@@ -358,22 +360,29 @@ function travelInquiry(agent) {
 
 
 
-function \(agent) {
+function bestProgram(agent) {
     teamNumber = undefined;
 
     const quickReplies = new Suggestion({
         title: choose,
-        reply: `Main Menu`
+        reply: `Learn more about FLL Jr.`
     });
 
     quickReplies.title=`FLL Jr. is for kids 6-10, FLL for kids 9-14, FTC for kids 12-18 and FRC for kids 14-18.`;
 
-    quickReplies.addReply_(`Learn more about FLL Jr.`);
     quickReplies.addReply_(`Learn more about FLL`);
     quickReplies.addReply_(`Learn more about FTC`);
     quickReplies.addReply_(`Learn more about FRC`);
+
+    agent.add(quickReplies);
 }
 
+
+function swearing(agent) {
+    teamNumber = undefined;
+
+    agent.add(`The FIRST mission is to inspire a generation of science and technology leaders who are both gracious and professional. Gracious Professionalism is part of the ethos of FIRST and we expect everyone to exhibit Gracious Professionalism® at all times. Please refer to the code of conduct.`);
+}
 
 
 
@@ -418,16 +427,3 @@ function checkWord(word) {
         word==`frc`) return `FRC`;
     else return word;
 }
-/*
-function callTBA(teamNumber) {
-    const options = {
-        url: 'https://www.thebluealliance.com/api/v3/team/frc'+teamNumber,
-        headers:
-        {
-            'X-TBA-Auth-Key': 'iILYwywnVYDP36CtgFVYcZC97yci1cvRtd94iehC541M9gkMVn6VuFxhtSRBqVHe'
-        },
-        json: true
-    }
-    return request(options)
-}
-*/
