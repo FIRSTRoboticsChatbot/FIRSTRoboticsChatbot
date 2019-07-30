@@ -365,14 +365,14 @@ function bestProgram(agent) {
 
     const quickReplies = new Suggestion({
         title: choose,
-        reply: `Learn more about FLL Jr.`
+        reply: `Learn about FLL Jr.`
     });
 
     quickReplies.title=`FLL Jr. is for kids 6-10, FLL for kids 9-14, FTC for kids 12-18 and FRC for kids 14-18.`;
 
-    quickReplies.addReply_(`Learn more about FLL`);
-    quickReplies.addReply_(`Learn more about FTC`);
-    quickReplies.addReply_(`Learn more about FRC`);
+    quickReplies.addReply_(`Learn about FLL`);
+    quickReplies.addReply_(`Learn about FTC`);
+    quickReplies.addReply_(`Learn about FRC`);
 
     agent.add(quickReplies);
 }
